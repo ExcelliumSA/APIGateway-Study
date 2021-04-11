@@ -1,9 +1,15 @@
 #!/bin/bash
 APIMAN_HOST=$1
+if [ "$APIMAN_HOST" == "" ]; then
+	echo "Missing APIMAN host!"
+	exit -1
+fi
+echo "[+] APIMAN host: $APIMAN_HOST"
+echo "[+] Setup APIMAN instance:"
+python import-config.py $APIMAN_HOST
 echo -n "[+] Create HTTP BIN: "
 bin_id=$(curl -s -X POST -d "private=false" https://requestbin.net/api/v1/bins | jq -r '.name')
 echo $bin_id
-echo "[+] APIMAN host: $APIMAN_HOST"
 for venom_plan in $(ls *.yaml)
 do
 	echo "[+] Execute test plan: $venom_plan"

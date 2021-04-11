@@ -1,2 +1,6 @@
 APIMAN.zip
+APIMAN-CLI/
+test.js
+node_modules/
+package-lock.json
 test_results.json
