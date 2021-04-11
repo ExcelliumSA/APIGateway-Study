@@ -1,0 +1,1443 @@
+{
+  "Metadata" : {
+    "id" : 1618066115889,
+    "exportedOn" : "2021-04-10T14:48:35Z",
+    "apimanVersion" : "2.0.1-SNAPSHOT"
+  },
+  "Users" : [ {
+    "username" : "admin",
+    "fullName" : "Admin User",
+    "email" : "admin@example.org",
+    "joinedOn" : "2021-04-10T08:33:29Z",
+    "admin" : false
+  } ],
+  "Gateways" : [ {
+    "id" : "TheGateway",
+    "name" : "The Gateway",
+    "description" : "This is the default gateway.",
+    "createdBy" : "admin",
+    "createdOn" : "2018-05-09T12:00:00Z",
+    "modifiedBy" : "admin",
+    "modifiedOn" : "2021-04-05T09:03:08Z",
+    "type" : "REST",
+    "configuration" : "{\"endpoint\":\"${apiman.gateway-endpoint:https://localhost:8443/apiman-gateway-api}\",\"username\":\"${apiman.gateway-endpoint.username:apimanager}\",\"password\":\"${apiman.gateway-endpoint.password:apiman123!}\"}"
+  } ],
+  "Plugins" : [ {
+    "id" : 999,
+    "groupId" : "io.apiman.plugins",
+    "artifactId" : "apiman-plugins-http-security-policy",
+    "version" : "2.0.0.Final",
+    "name" : "HTTP Security Policy Plugin",
+    "description" : "Security-related HTTP headers can be set which can help mitigate a range of common security vulnerabilities.",
+    "createdBy" : "admin",
+    "createdOn" : "2021-04-05T10:10:48Z",
+    "deleted" : false
+  }, {
+    "id" : 1000,
+    "groupId" : "io.apiman.plugins",
+    "artifactId" : "apiman-plugins-simple-header-policy",
+    "version" : "2.0.0.Final",
+    "name" : "HTTP Header Policy Plugin",
+    "description" : "Offers a simple policy that allows request headers to be added or stripped from the HTTP request (outgoing) or HTTP response (incoming).",
+    "createdBy" : "admin",
+    "createdOn" : "2021-04-05T10:11:17Z",
+    "deleted" : false
+  }, {
+    "id" : 1001,
+    "groupId" : "io.apiman.plugins",
+    "artifactId" : "apiman-plugins-cors-policy",
+    "version" : "2.0.0.Final",
+    "name" : "CORS Policy Plugin",
+    "description" : "This plugin implements CORS (Cross-origin resource sharing): A method of controlling access to resources outside of an originating domain.",
+    "createdBy" : "admin",
+    "createdOn" : "2021-04-05T10:11:28Z",
+    "deleted" : false
+  }, {
+    "id" : 1002,
+    "groupId" : "io.apiman.plugins",
+    "artifactId" : "apiman-plugins-jwt-policy",
+    "version" : "2.0.0.Final",
+    "name" : "JWT Policy",
+    "description" : "Validating JWTs.",
+    "createdBy" : "admin",
+    "createdOn" : "2021-04-05T16:07:56Z",
+    "deleted" : true
+  }, {
+    "id" : 1003,
+    "groupId" : "io.apiman.plugins",
+    "artifactId" : "apiman-plugins-transformation-policy",
+    "version" : "2.0.0.Final",
+    "name" : "Transformation Policy Plugin",
+    "description" : "This plugin provides a very simple policy which can transform the request and/or response payload between XML and JSON.",
+    "createdBy" : "admin",
+    "createdOn" : "2021-04-08T15:00:37Z",
+    "deleted" : true
+  } ],
+  "Roles" : [ {
+    "id" : "APIDeveloper",
+    "name" : "API Developer",
+    "description" : "Users responsible for creating and managing APIs should be granted this role within an Organization.",
+    "createdBy" : "admin",
+    "createdOn" : "2016-05-16T12:34:14Z",
+    "autoGrant" : false,
+    "permissions" : [ "planEdit", "planView", "apiAdmin", "planAdmin", "apiEdit", "apiView", "orgView" ]
+  }, {
+    "id" : "ClientAppDeveloper",
+    "name" : "Client App Developer",
+    "description" : "Users responsible for creating and managing client apps should be granted this role within an Organization.",
+    "createdBy" : "admin",
+    "createdOn" : "2016-05-16T12:34:14Z",
+    "autoGrant" : false,
+    "permissions" : [ "clientView", "clientEdit", "clientAdmin", "orgView" ]
+  }, {
+    "id" : "OrganizationOwner",
+    "name" : "Organization Owner",
+    "description" : "Automatically granted to the user who creates an Organization.  Grants all privileges.",
+    "createdBy" : "admin",
+    "createdOn" : "2016-05-16T12:34:14Z",
+    "autoGrant" : true,
+    "permissions" : [ "orgEdit", "planEdit", "planView", "clientView", "apiAdmin", "planAdmin", "clientEdit", "apiEdit", "clientAdmin", "apiView", "orgView", "orgAdmin" ]
+  } ],
+  "PolicyDefinitions" : [ {
+    "id" : "AuthorizationPolicy",
+    "policyImpl" : "class:io.apiman.gateway.engine.policies.AuthorizationPolicy",
+    "name" : "Authorization Policy",
+    "description" : "Enables fine grained authorization to API resources based on authenticated user roles.",
+    "icon" : "users",
+    "templates" : [ {
+      "template" : "Appropriate authorization roles are required.  There are ${rules.size()} authorization rules defined."
+    } ],
+    "formType" : "Default",
+    "deleted" : false
+  }, {
+    "id" : "BASICAuthenticationPolicy",
+    "policyImpl" : "class:io.apiman.gateway.engine.policies.BasicAuthenticationPolicy",
+    "name" : "BASIC Authentication Policy",
+    "description" : "Enables HTTP BASIC Authentication on an API.  Some configuration required.",
+    "icon" : "lock",
+    "templates" : [ {
+      "template" : "Access to the API is protected by BASIC Authentication through the '${realm}' authentication realm.  @if{forwardIdentityHttpHeader != null}Successfully authenticated requests will forward the authenticated identity to the back end API via the '${forwardIdentityHttpHeader}' custom HTTP header.@end{}"
+    } ],
+    "formType" : "Default",
+    "deleted" : false
+  }, {
+    "id" : "CachingResourcesPolicy",
+    "policyImpl" : "class:io.apiman.gateway.engine.policies.CachingResourcesPolicy",
+    "name" : "Caching Resources Policy",
+    "description" : "Allows caching of API responses in the Gateway to reduce overall traffic to the back-end API.",
+    "icon" : "hdd-o",
+    "templates" : [ {
+      "template" : "API responses will be cached for @{ttl} seconds."
+    } ],
+    "deleted" : false
+  }, {
+    "id" : "IPBlacklistPolicy",
+    "policyImpl" : "class:io.apiman.gateway.engine.policies.IPBlacklistPolicy",
+    "name" : "IP Blacklist Policy",
+    "description" : "Requests that originate from a specified set of valid IP addresses will be denied access.",
+    "icon" : "thumbs-down",
+    "templates" : [ {
+      "template" : "Requests that originate from the set of ${ipList.size()} configured IP address(es) will be denied access to the managed API."
+    } ],
+    "formType" : "Default",
+    "deleted" : false
+  }, {
+    "id" : "IPWhitelistPolicy",
+    "policyImpl" : "class:io.apiman.gateway.engine.policies.IPWhitelistPolicy",
+    "name" : "IP Whitelist Policy",
+    "description" : "Only requests that originate from a specified set of valid IP addresses will be allowed through.",
+    "icon" : "filter",
+    "templates" : [ {
+      "template" : "Only requests that originate from the set of ${ipList.size()} configured IP address(es) will be allowed to invoke the managed API."
+    } ],
+    "formType" : "Default",
+    "deleted" : false
+  }, {
+    "id" : "IgnoredResourcesPolicy",
+    "policyImpl" : "class:io.apiman.gateway.engine.policies.IgnoredResourcesPolicy",
+    "name" : "Ignored Resources Policy",
+    "description" : "Requests satisfying the provided regular expression will be ignored.",
+    "icon" : "eye-slash",
+    "templates" : [ {
+      "template" : "Requests matching any of the ${rules.size()} regular expressions provided will receive a 404 error code."
+    } ],
+    "formType" : "Default",
+    "deleted" : false
+  }, {
+    "id" : "QuotaPolicy",
+    "policyImpl" : "class:io.apiman.gateway.engine.policies.QuotaPolicy",
+    "name" : "Quota Policy",
+    "description" : "Provides a way to limit the total number of requests that can be sent to an API.",
+    "icon" : "exchange",
+    "templates" : [ {
+      "template" : "Consumers cannot exceed their quota of ${limit} requests per ${granularity} per ${period}."
+    } ],
+    "formType" : "Default",
+    "deleted" : false
+  }, {
+    "id" : "RateLimitingPolicy",
+    "policyImpl" : "class:io.apiman.gateway.engine.policies.RateLimitingPolicy",
+    "name" : "Rate Limiting Policy",
+    "description" : "Enforces rate configurable request rate limits on an API.  This ensures that consumers can't overload an API with too many requests.",
+    "icon" : "sliders",
+    "templates" : [ {
+      "template" : "Consumers are limited to ${limit} requests per ${granularity} per ${period}."
+    } ],
+    "formType" : "Default",
+    "deleted" : false
+  }, {
+    "id" : "TimeRestrictedAccessPolicy",
+    "policyImpl" : "class:io.apiman.gateway.engine.policies.TimeRestrictedAccessPolicy",
+    "name" : "Time Restricted Access Policy",
+    "description" : "Requests matching the specified regular expression and made within the specified time period will be ignored.",
+    "icon" : "clock-o",
+    "templates" : [ {
+      "template" : "Requests matching the regular expression and made outside the specified time period will receive a 423 error code."
+    } ],
+    "formType" : "Default",
+    "deleted" : false
+  }, {
+    "id" : "TransferQuotaPolicy",
+    "policyImpl" : "class:io.apiman.gateway.engine.policies.TransferQuotaPolicy",
+    "name" : "Transfer Quota Policy",
+    "description" : "Provides a way to limit the total number of bytes that can be transferred from (or to) an API.",
+    "icon" : "download",
+    "templates" : [ {
+      "template" : "Consumers are limited to transferring ${limit} bytes per ${granularity} per ${period}."
+    } ],
+    "formType" : "Default",
+    "deleted" : false
+  }, {
+    "id" : "URLRewritingPolicy",
+    "policyImpl" : "class:io.apiman.gateway.engine.policies.URLRewritingPolicy",
+    "name" : "URL Rewriting Policy",
+    "description" : "Responses from the back-end API will be modified by fixing up any incorrect URLs found with modified ones.  This is useful because apiman works through an API Gateway.",
+    "icon" : "pencil-square",
+    "templates" : [ {
+      "template" : "Requests and/or responses will be modified by finding all text matching regular expression '${fromRegex}' with '${toReplacement}'."
+    } ],
+    "formType" : "Default",
+    "deleted" : false
+  }, {
+    "id" : "cors-policy",
+    "policyImpl" : "plugin:io.apiman.plugins:apiman-plugins-cors-policy:2.0.0.Final:war/io.apiman.plugins.cors_policy.CorsPolicy",
+    "name" : "CORS Policy",
+    "description" : "CORS regulates access resource requests from outside of an originating domain. Configuration required.",
+    "icon" : "gavel",
+    "templates" : [ {
+      "template" : "Cross-origin requests from @if{allowOrigin.contains(\"*\")} any @else{} @{allowOrigin.size()} @end{} origin(s) will be permitted upon satisfying method, header and credential constraints. @if{errorOnCorsFailure} Denied requests will be terminated. @end{} Preflight requests will be cached for @{maxAge} delta seconds."
+    } ],
+    "pluginId" : 1001,
+    "formType" : "JsonSchema",
+    "form" : "schemas/cors-policyDef.schema",
+    "deleted" : false
+  }, {
+    "id" : "http-security-policy",
+    "policyImpl" : "plugin:io.apiman.plugins:apiman-plugins-http-security-policy:2.0.0.Final:war/io.apiman.plugins.httpsecuritypolicy.HttpSecurityPolicy",
+    "name" : "HTTP Security Policy",
+    "description" : "Security-related HTTP headers can be set, such as HSTS, CSP and XSS protection.",
+    "icon" : "bullhorn",
+    "templates" : [ {
+      "template" : "HTTP security headers have been set."
+    } ],
+    "pluginId" : 999,
+    "formType" : "JsonSchema",
+    "form" : "schemas/http-security-policyDef.schema",
+    "deleted" : false
+  }, {
+    "id" : "jwt-policy",
+    "policyImpl" : "plugin:io.apiman.plugins:apiman-plugins-jwt-policy:2.0.0.Final:war/io.apiman.plugins.jwt.JWTPolicy",
+    "name" : "JWT Policy",
+    "description" : "Generic JWT authentication policy.",
+    "icon" : "lock",
+    "templates" : [ {
+      "template" : "JWT authentication is @if{requireJWT} required @else{} enabled @end{}."
+    } ],
+    "pluginId" : 1002,
+    "formType" : "JsonSchema",
+    "form" : "schemas/jwt-policyDef.schema",
+    "deleted" : true
+  }, {
+    "id" : "simple-header-policy",
+    "policyImpl" : "plugin:io.apiman.plugins:apiman-plugins-simple-header-policy:2.0.0.Final:war/io.apiman.plugins.simpleheaderpolicy.SimpleHeaderPolicy",
+    "name" : "Simple Header Policy",
+    "description" : "Allows the granular addition and removal of headers.",
+    "icon" : "header",
+    "templates" : [ {
+      "template" : "@{addHeaders.size()} addition rules and @{stripHeaders.size()} deletion rules are active."
+    } ],
+    "pluginId" : 1000,
+    "formType" : "JsonSchema",
+    "form" : "schemas/simple-header-policyDef.schema",
+    "deleted" : false
+  }, {
+    "id" : "transformation-policy",
+    "policyImpl" : "plugin:io.apiman.plugins:apiman-plugins-transformation-policy:2.0.0.Final:war/io.apiman.plugins.transformation_policy.TransformationPolicy",
+    "name" : "Transformation Policy",
+    "description" : "Transforms the data from one format to another.",
+    "icon" : "adjust",
+    "templates" : [ ],
+    "pluginId" : 1003,
+    "formType" : "JsonSchema",
+    "form" : "schemas/transformation-policyDef.schema",
+    "deleted" : true
+  } ],
+  "Developers" : [ ],
+  "Orgs" : [ {
+    "OrganizationBean" : {
+      "id" : "XLM",
+      "name" : "XLM",
+      "description" : "Excellium organization",
+      "createdBy" : "admin",
+      "createdOn" : "2021-04-05T07:11:23Z",
+      "modifiedBy" : "admin",
+      "modifiedOn" : "2021-04-05T07:11:23Z"
+    },
+    "Memberships" : [ {
+      "id" : 1004,
+      "userId" : "admin",
+      "roleId" : "OrganizationOwner",
+      "organizationId" : "XLM",
+      "createdOn" : "2021-04-05T07:11:23Z"
+    } ],
+    "Plans" : [ {
+      "PlanBean" : {
+        "id" : "standard",
+        "name" : "standard",
+        "description" : "Standard API plan offered to any paid clients.",
+        "createdBy" : "admin",
+        "createdOn" : "2021-04-05T07:12:57Z"
+      },
+      "Versions" : [ {
+        "PlanVersionBean" : {
+          "id" : 1005,
+          "status" : "Locked",
+          "version" : "1.0",
+          "createdBy" : "admin",
+          "createdOn" : "2021-04-05T07:12:57Z",
+          "modifiedBy" : "admin",
+          "modifiedOn" : "2021-04-05T07:16:52Z",
+          "lockedOn" : "2021-04-05T07:22:49Z"
+        },
+        "Policies" : [ {
+          "id" : 1006,
+          "type" : "Plan",
+          "organizationId" : "XLM",
+          "entityId" : "standard",
+          "entityVersion" : "1.0",
+          "name" : "IP Whitelist Policy",
+          "configuration" : "{\"ipList\":[\"127.*.*.*\"],\"responseCode\":\"403\"}",
+          "createdBy" : "admin",
+          "createdOn" : "2021-04-05T07:16:52Z",
+          "modifiedBy" : "admin",
+          "modifiedOn" : "2021-04-05T07:16:52Z",
+          "definition" : {
+            "id" : "IPWhitelistPolicy",
+            "templates" : [ ],
+            "deleted" : false
+          },
+          "orderIndex" : 1
+        } ]
+      }, {
+        "PlanVersionBean" : {
+          "id" : 1007,
+          "status" : "Locked",
+          "version" : "1.1",
+          "createdBy" : "admin",
+          "createdOn" : "2021-04-05T07:35:17Z",
+          "modifiedBy" : "admin",
+          "modifiedOn" : "2021-04-05T07:36:23Z",
+          "lockedOn" : "2021-04-05T07:36:51Z"
+        },
+        "Policies" : [ {
+          "id" : 1008,
+          "type" : "Plan",
+          "organizationId" : "XLM",
+          "entityId" : "standard",
+          "entityVersion" : "1.1",
+          "name" : "IP Whitelist Policy",
+          "configuration" : "{\"ipList\":[\"127.*.*.*\"],\"responseCode\":\"403\"}",
+          "createdBy" : "admin",
+          "createdOn" : "2021-04-05T07:35:17Z",
+          "modifiedBy" : "admin",
+          "modifiedOn" : "2021-04-05T07:35:17Z",
+          "definition" : {
+            "id" : "IPWhitelistPolicy",
+            "templates" : [ ],
+            "deleted" : false
+          },
+          "orderIndex" : 1
+        }, {
+          "id" : 1009,
+          "type" : "Plan",
+          "organizationId" : "XLM",
+          "entityId" : "standard",
+          "entityVersion" : "1.1",
+          "name" : "Rate Limiting Policy",
+          "configuration" : "{\"limit\":10,\"granularity\":\"Client\",\"period\":\"Second\"}",
+          "createdBy" : "admin",
+          "createdOn" : "2021-04-05T07:36:23Z",
+          "modifiedBy" : "admin",
+          "modifiedOn" : "2021-04-05T07:36:23Z",
+          "definition" : {
+            "id" : "RateLimitingPolicy",
+            "templates" : [ ],
+            "deleted" : false
+          },
+          "orderIndex" : 2
+        } ]
+      }, {
+        "PlanVersionBean" : {
+          "id" : 1010,
+          "status" : "Locked",
+          "version" : "1.2",
+          "createdBy" : "admin",
+          "createdOn" : "2021-04-08T16:47:56Z",
+          "modifiedBy" : "admin",
+          "modifiedOn" : "2021-04-08T16:48:09Z",
+          "lockedOn" : "2021-04-08T16:48:14Z"
+        },
+        "Policies" : [ {
+          "id" : 1011,
+          "type" : "Plan",
+          "organizationId" : "XLM",
+          "entityId" : "standard",
+          "entityVersion" : "1.2",
+          "name" : "IP Whitelist Policy",
+          "configuration" : "{\"ipList\":[\"127.*.*.*\"],\"responseCode\":\"403\"}",
+          "createdBy" : "admin",
+          "createdOn" : "2021-04-08T16:47:56Z",
+          "modifiedBy" : "admin",
+          "modifiedOn" : "2021-04-08T16:47:56Z",
+          "definition" : {
+            "id" : "IPWhitelistPolicy",
+            "templates" : [ ],
+            "deleted" : false
+          },
+          "orderIndex" : 1
+        }, {
+          "id" : 1012,
+          "type" : "Plan",
+          "organizationId" : "XLM",
+          "entityId" : "standard",
+          "entityVersion" : "1.2",
+          "name" : "Rate Limiting Policy",
+          "configuration" : "{\"limit\":10,\"granularity\":\"Client\",\"period\":\"Minute\"}",
+          "createdBy" : "admin",
+          "createdOn" : "2021-04-08T16:47:56Z",
+          "modifiedBy" : "admin",
+          "modifiedOn" : "2021-04-08T16:48:09Z",
+          "definition" : {
+            "id" : "RateLimitingPolicy",
+            "templates" : [ ],
+            "deleted" : false
+          },
+          "orderIndex" : 2
+        } ]
+      }, {
+        "PlanVersionBean" : {
+          "id" : 1079,
+          "status" : "Locked",
+          "version" : "1.3",
+          "createdBy" : "admin",
+          "createdOn" : "2021-04-10T08:38:17Z",
+          "modifiedBy" : "admin",
+          "modifiedOn" : "2021-04-10T08:38:47Z",
+          "lockedOn" : "2021-04-10T08:38:53Z"
+        },
+        "Policies" : [ {
+          "id" : 1081,
+          "type" : "Plan",
+          "organizationId" : "XLM",
+          "entityId" : "standard",
+          "entityVersion" : "1.3",
+          "name" : "IP Whitelist Policy",
+          "configuration" : "{\"ipList\":[\"127.*.*.*\",\"172.*.*.*\"],\"responseCode\":\"403\"}",
+          "createdBy" : "admin",
+          "createdOn" : "2021-04-10T08:38:17Z",
+          "modifiedBy" : "admin",
+          "modifiedOn" : "2021-04-10T08:38:47Z",
+          "definition" : {
+            "id" : "IPWhitelistPolicy",
+            "templates" : [ ],
+            "deleted" : false
+          },
+          "orderIndex" : 1
+        }, {
+          "id" : 1083,
+          "type" : "Plan",
+          "organizationId" : "XLM",
+          "entityId" : "standard",
+          "entityVersion" : "1.3",
+          "name" : "Rate Limiting Policy",
+          "configuration" : "{\"limit\":10,\"granularity\":\"Client\",\"period\":\"Minute\"}",
+          "createdBy" : "admin",
+          "createdOn" : "2021-04-10T08:38:17Z",
+          "modifiedBy" : "admin",
+          "modifiedOn" : "2021-04-10T08:38:17Z",
+          "definition" : {
+            "id" : "RateLimitingPolicy",
+            "templates" : [ ],
+            "deleted" : false
+          },
+          "orderIndex" : 2
+        } ]
+      } ]
+    } ],
+    "Apis" : [ {
+      "ApiBean" : {
+        "id" : "bin",
+        "name" : "bin",
+        "description" : "API allowing to interact with \"requestbin.net\" backend API.",
+        "createdBy" : "admin",
+        "createdOn" : "2021-04-05T15:13:38Z",
+        "numPublished" : 4
+      },
+      "Versions" : [ {
+        "ApiVersionBean" : {
+          "id" : 1013,
+          "status" : "Published",
+          "endpoint" : "https://requestbin.net/r/",
+          "endpointType" : "rest",
+          "endpointContentType" : "json",
+          "endpointProperties" : { },
+          "gateways" : [ {
+            "gatewayId" : "TheGateway"
+          } ],
+          "publicAPI" : true,
+          "plans" : [ ],
+          "version" : "1.0",
+          "createdBy" : "admin",
+          "createdOn" : "2021-04-05T15:13:38Z",
+          "modifiedBy" : "admin",
+          "modifiedOn" : "2021-04-05T15:36:47Z",
+          "publishedOn" : "2021-04-05T15:36:50Z",
+          "definitionType" : "None",
+          "parsePayload" : false,
+          "disableKeysStrip" : false
+        },
+        "Policies" : [ {
+          "id" : 1014,
+          "type" : "Api",
+          "organizationId" : "XLM",
+          "entityId" : "bin",
+          "entityVersion" : "1.0",
+          "name" : "Simple Header Policy",
+          "configuration" : "{\"addHeaders\":[],\"stripHeaders\":[{\"stripType\":\"Key\",\"with\":\"String\",\"pattern\":\" cf-request-id\",\"applyTo\":\"Response\"},{\"stripType\":\"Key\",\"with\":\"String\",\"pattern\":\"Report-To\",\"applyTo\":\"Response\"},{\"stripType\":\"Key\",\"with\":\"String\",\"pattern\":\"Server\",\"applyTo\":\"Response\"},{\"stripType\":\"Key\",\"with\":\"String\",\"pattern\":\"CF-RAY\",\"applyTo\":\"Response\"},{\"stripType\":\"Key\",\"with\":\"String\",\"pattern\":\"NEL\",\"applyTo\":\"Response\"},{\"stripType\":\"Key\",\"with\":\"String\",\"pattern\":\"CF-Cache-Status\",\"applyTo\":\"Response\"},{\"stripType\":\"Key\",\"with\":\"String\",\"pattern\":\"Sponsored-By\",\"applyTo\":\"Response\"}]}",
+          "createdBy" : "admin",
+          "createdOn" : "2021-04-05T15:20:46Z",
+          "modifiedBy" : "admin",
+          "modifiedOn" : "2021-04-05T15:36:47Z",
+          "definition" : {
+            "id" : "simple-header-policy",
+            "templates" : [ ],
+            "deleted" : false
+          },
+          "orderIndex" : 0
+        }, {
+          "id" : 1015,
+          "type" : "Api",
+          "organizationId" : "XLM",
+          "entityId" : "bin",
+          "entityVersion" : "1.0",
+          "name" : "HTTP Security Policy",
+          "configuration" : "{\"hsts\":{\"enabled\":false,\"includeSubdomains\":false,\"maxAge\":0,\"preload\":false},\"contentSecurityPolicy\":{\"mode\":\"ENABLED\",\"csp\":\"default-src 'self'\"},\"frameOptions\":\"DENY\",\"xssProtection\":\"OFF\",\"contentTypeOptions\":true}",
+          "createdBy" : "admin",
+          "createdOn" : "2021-04-05T15:18:52Z",
+          "modifiedBy" : "admin",
+          "modifiedOn" : "2021-04-05T15:24:09Z",
+          "definition" : {
+            "id" : "http-security-policy",
+            "templates" : [ ],
+            "deleted" : false
+          },
+          "orderIndex" : 1
+        }, {
+          "id" : 1016,
+          "type" : "Api",
+          "organizationId" : "XLM",
+          "entityId" : "bin",
+          "entityVersion" : "1.0",
+          "name" : "CORS Policy",
+          "configuration" : "{\"errorOnCorsFailure\":true,\"allowOrigin\":[\"https://localhost:8443\",\"http://localhost:8080\"],\"allowCredentials\":false,\"exposeHeaders\":[],\"allowHeaders\":[],\"allowMethods\":[],\"maxAge\":10}",
+          "createdBy" : "admin",
+          "createdOn" : "2021-04-05T15:17:13Z",
+          "modifiedBy" : "admin",
+          "modifiedOn" : "2021-04-05T15:23:04Z",
+          "definition" : {
+            "id" : "cors-policy",
+            "templates" : [ ],
+            "deleted" : false
+          },
+          "orderIndex" : 2
+        } ]
+      } ]
+    }, {
+      "ApiBean" : {
+        "id" : "blog",
+        "name" : "blog",
+        "description" : "API allowing to interact with \"jsonplaceholder.typicode.com\" backend API.",
+        "createdBy" : "admin",
+        "createdOn" : "2021-04-05T07:18:57Z",
+        "numPublished" : 3
+      },
+      "Versions" : [ {
+        "ApiVersionBean" : {
+          "id" : 1017,
+          "status" : "Published",
+          "endpoint" : "http://jsonplaceholder.typicode.com/",
+          "endpointType" : "rest",
+          "endpointContentType" : "json",
+          "endpointProperties" : { },
+          "gateways" : [ {
+            "gatewayId" : "TheGateway"
+          } ],
+          "publicAPI" : false,
+          "plans" : [ {
+            "planId" : "standard",
+            "version" : "1.1"
+          } ],
+          "version" : "1.0",
+          "createdBy" : "admin",
+          "createdOn" : "2021-04-05T07:18:57Z",
+          "modifiedBy" : "admin",
+          "modifiedOn" : "2021-04-05T07:37:11Z",
+          "publishedOn" : "2021-04-05T09:03:49Z",
+          "definitionType" : "None",
+          "parsePayload" : true,
+          "disableKeysStrip" : false
+        },
+        "Policies" : [ {
+          "id" : 1018,
+          "type" : "Api",
+          "organizationId" : "XLM",
+          "entityId" : "blog",
+          "entityVersion" : "1.0",
+          "name" : "BASIC Authentication Policy",
+          "configuration" : "{\"realm\":\"Blog\",\"forwardIdentityHttpHeader\":\"X-User\",\"staticIdentity\":{\"identities\":[{\"username\":\"user\",\"password\":\"password\"}]},\"requireBasicAuth\":true}",
+          "createdBy" : "admin",
+          "createdOn" : "2021-04-05T07:31:52Z",
+          "modifiedBy" : "admin",
+          "modifiedOn" : "2021-04-05T07:31:52Z",
+          "definition" : {
+            "id" : "BASICAuthenticationPolicy",
+            "templates" : [ ],
+            "deleted" : false
+          },
+          "orderIndex" : 1
+        } ]
+      }, {
+        "ApiVersionBean" : {
+          "id" : 1019,
+          "status" : "Published",
+          "endpoint" : "http://jsonplaceholder.typicode.com/",
+          "endpointType" : "rest",
+          "endpointContentType" : "json",
+          "endpointProperties" : { },
+          "gateways" : [ {
+            "gatewayId" : "TheGateway"
+          } ],
+          "publicAPI" : false,
+          "plans" : [ {
+            "planId" : "standard",
+            "version" : "1.2"
+          } ],
+          "version" : "1.1",
+          "createdBy" : "admin",
+          "createdOn" : "2021-04-08T16:48:34Z",
+          "modifiedBy" : "admin",
+          "modifiedOn" : "2021-04-08T16:48:42Z",
+          "publishedOn" : "2021-04-08T16:48:49Z",
+          "definitionType" : "None",
+          "parsePayload" : false,
+          "disableKeysStrip" : false
+        },
+        "Policies" : [ {
+          "id" : 1020,
+          "type" : "Api",
+          "organizationId" : "XLM",
+          "entityId" : "blog",
+          "entityVersion" : "1.1",
+          "name" : "BASIC Authentication Policy",
+          "configuration" : "{\"realm\":\"Blog\",\"forwardIdentityHttpHeader\":\"X-User\",\"staticIdentity\":{\"identities\":[{\"username\":\"user\",\"password\":\"password\"}]},\"requireBasicAuth\":true}",
+          "createdBy" : "admin",
+          "createdOn" : "2021-04-08T16:48:34Z",
+          "modifiedBy" : "admin",
+          "modifiedOn" : "2021-04-08T16:48:34Z",
+          "definition" : {
+            "id" : "BASICAuthenticationPolicy",
+            "templates" : [ ],
+            "deleted" : false
+          },
+          "orderIndex" : 1
+        } ]
+      }, {
+        "ApiVersionBean" : {
+          "id" : 1087,
+          "status" : "Published",
+          "endpoint" : "http://jsonplaceholder.typicode.com/",
+          "endpointType" : "rest",
+          "endpointContentType" : "json",
+          "endpointProperties" : { },
+          "gateways" : [ {
+            "gatewayId" : "TheGateway"
+          } ],
+          "publicAPI" : false,
+          "plans" : [ {
+            "planId" : "standard",
+            "version" : "1.3"
+          } ],
+          "version" : "1.2",
+          "createdBy" : "admin",
+          "createdOn" : "2021-04-10T08:39:11Z",
+          "modifiedBy" : "admin",
+          "modifiedOn" : "2021-04-10T08:39:20Z",
+          "publishedOn" : "2021-04-10T08:39:24Z",
+          "definitionType" : "None",
+          "parsePayload" : false,
+          "disableKeysStrip" : false
+        },
+        "Policies" : [ {
+          "id" : 1090,
+          "type" : "Api",
+          "organizationId" : "XLM",
+          "entityId" : "blog",
+          "entityVersion" : "1.2",
+          "name" : "BASIC Authentication Policy",
+          "configuration" : "{\"realm\":\"Blog\",\"forwardIdentityHttpHeader\":\"X-User\",\"staticIdentity\":{\"identities\":[{\"username\":\"user\",\"password\":\"password\"}]},\"requireBasicAuth\":true}",
+          "createdBy" : "admin",
+          "createdOn" : "2021-04-10T08:39:11Z",
+          "modifiedBy" : "admin",
+          "modifiedOn" : "2021-04-10T08:39:11Z",
+          "definition" : {
+            "id" : "BASICAuthenticationPolicy",
+            "templates" : [ ],
+            "deleted" : false
+          },
+          "orderIndex" : 1
+        } ]
+      } ]
+    } ],
+    "Clients" : [ {
+      "ClientBean" : {
+        "id" : "blog-consumer",
+        "name" : "blog-consumer",
+        "description" : "Command line consumer of the Blog API.",
+        "createdBy" : "admin",
+        "createdOn" : "2021-04-05T07:38:31Z"
+      },
+      "Versions" : [ {
+        "ClientVersionBean" : {
+          "id" : 1021,
+          "status" : "Registered",
+          "version" : "1.0",
+          "createdBy" : "admin",
+          "createdOn" : "2021-04-05T07:38:31Z",
+          "modifiedBy" : "admin",
+          "modifiedOn" : "2021-04-10T08:41:08Z",
+          "publishedOn" : "2021-04-10T08:41:13Z",
+          "apikey" : "d09e70b2-2abc-47d8-9168-80878e662e6a"
+        },
+        "Policies" : [ ],
+        "Contracts" : [ {
+          "id" : 1096,
+          "api" : {
+            "api" : {
+              "organization" : {
+                "id" : "XLM"
+              },
+              "id" : "blog"
+            },
+            "endpointProperties" : { },
+            "publicAPI" : false,
+            "version" : "1.2",
+            "parsePayload" : false,
+            "disableKeysStrip" : false
+          },
+          "plan" : {
+            "plan" : {
+              "organization" : {
+                "id" : "XLM"
+              },
+              "id" : "standard"
+            },
+            "version" : "1.3"
+          },
+          "createdBy" : "admin",
+          "createdOn" : "2021-04-10T08:41:08Z"
+        } ]
+      } ]
+    } ],
+    "Audits" : [ {
+      "id" : 1022,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Organization",
+      "createdOn" : "2021-04-05T07:11:23Z",
+      "what" : "Create"
+    }, {
+      "id" : 1023,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Plan",
+      "entityId" : "standard",
+      "createdOn" : "2021-04-05T07:12:57Z",
+      "what" : "Create"
+    }, {
+      "id" : 1024,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Plan",
+      "entityId" : "standard",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-05T07:12:57Z",
+      "what" : "Create"
+    }, {
+      "id" : 1025,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Plan",
+      "entityId" : "standard",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-05T07:16:52Z",
+      "what" : "AddPolicy",
+      "data" : "{\"policyDefId\":\"IPWhitelistPolicy\"}"
+    }, {
+      "id" : 1026,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "blog",
+      "createdOn" : "2021-04-05T07:18:57Z",
+      "what" : "Create"
+    }, {
+      "id" : 1027,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "blog",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-05T07:18:57Z",
+      "what" : "Create"
+    }, {
+      "id" : 1028,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "blog",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-05T07:20:56Z",
+      "what" : "Update",
+      "data" : "{\"changes\":[{\"name\":\"endpoint\",\"before\":null,\"after\":\"http://jsonplaceholder.typicode.com/\"},{\"name\":\"endpointType\",\"before\":null,\"after\":\"rest\"},{\"name\":\"endpointContentType\",\"before\":null,\"after\":\"json\"},{\"name\":\"parsePayload\",\"before\":\"false\",\"after\":\"true\"}]}"
+    }, {
+      "id" : 1029,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Plan",
+      "entityId" : "standard",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-05T07:22:49Z",
+      "what" : "Lock"
+    }, {
+      "id" : 1030,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "blog",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-05T07:23:16Z",
+      "what" : "Update",
+      "data" : "{\"changes\":[{\"name\":\"plans\",\"before\":\"\",\"after\":\"standard:1.0\"}]}"
+    }, {
+      "id" : 1031,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "blog",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-05T07:31:52Z",
+      "what" : "AddPolicy",
+      "data" : "{\"policyDefId\":\"BASICAuthenticationPolicy\"}"
+    }, {
+      "id" : 1032,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Plan",
+      "entityId" : "standard",
+      "entityVersion" : "1.1",
+      "createdOn" : "2021-04-05T07:35:17Z",
+      "what" : "Create"
+    }, {
+      "id" : 1033,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Plan",
+      "entityId" : "standard",
+      "entityVersion" : "1.1",
+      "createdOn" : "2021-04-05T07:35:17Z",
+      "what" : "AddPolicy",
+      "data" : "{\"policyDefId\":\"IPWhitelistPolicy\"}"
+    }, {
+      "id" : 1034,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Plan",
+      "entityId" : "standard",
+      "entityVersion" : "1.1",
+      "createdOn" : "2021-04-05T07:36:23Z",
+      "what" : "AddPolicy",
+      "data" : "{\"policyDefId\":\"RateLimitingPolicy\"}"
+    }, {
+      "id" : 1035,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Plan",
+      "entityId" : "standard",
+      "entityVersion" : "1.1",
+      "createdOn" : "2021-04-05T07:36:51Z",
+      "what" : "Lock"
+    }, {
+      "id" : 1036,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "blog",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-05T07:37:11Z",
+      "what" : "Update",
+      "data" : "{\"changes\":[{\"name\":\"plans\",\"before\":\"standard:1.0\",\"after\":\"standard:1.1\"}]}"
+    }, {
+      "id" : 1037,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Client",
+      "entityId" : "blog-consumer",
+      "createdOn" : "2021-04-05T07:38:31Z",
+      "what" : "Create"
+    }, {
+      "id" : 1038,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Client",
+      "entityId" : "blog-consumer",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-05T07:38:31Z",
+      "what" : "Create"
+    }, {
+      "id" : 1039,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Organization",
+      "createdOn" : "2021-04-05T08:46:29Z",
+      "what" : "Grant",
+      "data" : "{\"userId\":\"publisher\",\"roles\":[\"APIDeveloper\"]}"
+    }, {
+      "id" : 1040,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Organization",
+      "createdOn" : "2021-04-05T08:48:52Z",
+      "what" : "Revoke",
+      "data" : "{\"userId\":\"publisher\",\"roles\":[\"*\"]}"
+    }, {
+      "id" : 1041,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "blog",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-05T09:03:49Z",
+      "what" : "Publish"
+    }, {
+      "id" : 1042,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Client",
+      "entityId" : "blog-consumer",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-05T09:07:15Z",
+      "what" : "CreateContract",
+      "data" : "{\"clientOrgId\":\"XLM\",\"clientId\":\"blog-consumer\",\"clientVersion\":\"1.0\",\"apiOrgId\":\"XLM\",\"apiId\":\"blog\",\"apiVersion\":\"1.0\",\"planId\":\"standard\",\"planVersion\":\"1.1\"}"
+    }, {
+      "id" : 1043,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "blog",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-05T09:07:15Z",
+      "what" : "CreateContract",
+      "data" : "{\"clientOrgId\":\"XLM\",\"clientId\":\"blog-consumer\",\"clientVersion\":\"1.0\",\"apiOrgId\":\"XLM\",\"apiId\":\"blog\",\"apiVersion\":\"1.0\",\"planId\":\"standard\",\"planVersion\":\"1.1\"}"
+    }, {
+      "id" : 1044,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Client",
+      "entityId" : "blog-consumer",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-05T09:07:30Z",
+      "what" : "Register"
+    }, {
+      "id" : 1045,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "bin",
+      "createdOn" : "2021-04-05T15:13:38Z",
+      "what" : "Create"
+    }, {
+      "id" : 1046,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "bin",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-05T15:13:38Z",
+      "what" : "Create"
+    }, {
+      "id" : 1047,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "bin",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-05T15:14:14Z",
+      "what" : "Update",
+      "data" : "{\"changes\":[{\"name\":\"endpoint\",\"before\":null,\"after\":\"http://requestbin.net/r/\"},{\"name\":\"endpointType\",\"before\":null,\"after\":\"rest\"},{\"name\":\"endpointContentType\",\"before\":null,\"after\":\"json\"}]}"
+    }, {
+      "id" : 1048,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "bin",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-05T15:14:23Z",
+      "what" : "Update",
+      "data" : "{\"changes\":[{\"name\":\"publicAPI\",\"before\":\"false\",\"after\":\"true\"}]}"
+    }, {
+      "id" : 1049,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "bin",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-05T15:17:13Z",
+      "what" : "AddPolicy",
+      "data" : "{\"policyDefId\":\"cors-policy\"}"
+    }, {
+      "id" : 1050,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "bin",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-05T15:18:52Z",
+      "what" : "AddPolicy",
+      "data" : "{\"policyDefId\":\"http-security-policy\"}"
+    }, {
+      "id" : 1051,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "bin",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-05T15:20:46Z",
+      "what" : "AddPolicy",
+      "data" : "{\"policyDefId\":\"simple-header-policy\"}"
+    }, {
+      "id" : 1052,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "bin",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-05T15:23:04Z",
+      "what" : "UpdatePolicy",
+      "data" : "{\"policyDefId\":\"cors-policy\"}"
+    }, {
+      "id" : 1053,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "bin",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-05T15:24:09Z",
+      "what" : "UpdatePolicy",
+      "data" : "{\"policyDefId\":\"http-security-policy\"}"
+    }, {
+      "id" : 1054,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "bin",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-05T15:26:37Z",
+      "what" : "UpdatePolicy",
+      "data" : "{\"policyDefId\":\"simple-header-policy\"}"
+    }, {
+      "id" : 1055,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "bin",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-05T15:27:38Z",
+      "what" : "Publish"
+    }, {
+      "id" : 1056,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "bin",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-05T15:28:38Z",
+      "what" : "ReorderPolicies"
+    }, {
+      "id" : 1057,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "bin",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-05T15:28:42Z",
+      "what" : "ReorderPolicies"
+    }, {
+      "id" : 1058,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "bin",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-05T15:29:03Z",
+      "what" : "Publish"
+    }, {
+      "id" : 1059,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "bin",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-05T15:35:19Z",
+      "what" : "Update",
+      "data" : "{\"changes\":[{\"name\":\"endpoint\",\"before\":\"http://requestbin.net/r/\",\"after\":\"https://requestbin.net/r/\"}]}"
+    }, {
+      "id" : 1060,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "bin",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-05T15:35:21Z",
+      "what" : "Publish"
+    }, {
+      "id" : 1061,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "bin",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-05T15:36:47Z",
+      "what" : "UpdatePolicy",
+      "data" : "{\"policyDefId\":\"simple-header-policy\"}"
+    }, {
+      "id" : 1062,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "bin",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-05T15:36:50Z",
+      "what" : "Publish"
+    }, {
+      "id" : 1063,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Plan",
+      "entityId" : "standard",
+      "entityVersion" : "1.2",
+      "createdOn" : "2021-04-08T16:47:56Z",
+      "what" : "Create"
+    }, {
+      "id" : 1064,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Plan",
+      "entityId" : "standard",
+      "entityVersion" : "1.2",
+      "createdOn" : "2021-04-08T16:47:56Z",
+      "what" : "AddPolicy",
+      "data" : "{\"policyDefId\":\"IPWhitelistPolicy\"}"
+    }, {
+      "id" : 1065,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Plan",
+      "entityId" : "standard",
+      "entityVersion" : "1.2",
+      "createdOn" : "2021-04-08T16:47:56Z",
+      "what" : "AddPolicy",
+      "data" : "{\"policyDefId\":\"RateLimitingPolicy\"}"
+    }, {
+      "id" : 1066,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Plan",
+      "entityId" : "standard",
+      "entityVersion" : "1.2",
+      "createdOn" : "2021-04-08T16:48:09Z",
+      "what" : "UpdatePolicy",
+      "data" : "{\"policyDefId\":\"RateLimitingPolicy\"}"
+    }, {
+      "id" : 1067,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Plan",
+      "entityId" : "standard",
+      "entityVersion" : "1.2",
+      "createdOn" : "2021-04-08T16:48:14Z",
+      "what" : "Lock"
+    }, {
+      "id" : 1068,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "blog",
+      "entityVersion" : "1.1",
+      "createdOn" : "2021-04-08T16:48:34Z",
+      "what" : "Create"
+    }, {
+      "id" : 1069,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "blog",
+      "entityVersion" : "1.1",
+      "createdOn" : "2021-04-08T16:48:34Z",
+      "what" : "Update",
+      "data" : "{\"changes\":[{\"name\":\"plans\",\"before\":\"\",\"after\":\"standard:1.1\"},{\"name\":\"endpoint\",\"before\":null,\"after\":\"http://jsonplaceholder.typicode.com/\"},{\"name\":\"endpointType\",\"before\":null,\"after\":\"rest\"},{\"name\":\"endpointContentType\",\"before\":null,\"after\":\"json\"}]}"
+    }, {
+      "id" : 1070,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "blog",
+      "entityVersion" : "1.1",
+      "createdOn" : "2021-04-08T16:48:34Z",
+      "what" : "AddPolicy",
+      "data" : "{\"policyDefId\":\"BASICAuthenticationPolicy\"}"
+    }, {
+      "id" : 1071,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "blog",
+      "entityVersion" : "1.1",
+      "createdOn" : "2021-04-08T16:48:42Z",
+      "what" : "Update",
+      "data" : "{\"changes\":[{\"name\":\"plans\",\"before\":\"standard:1.1\",\"after\":\"standard:1.2\"}]}"
+    }, {
+      "id" : 1072,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "blog",
+      "entityVersion" : "1.1",
+      "createdOn" : "2021-04-08T16:48:49Z",
+      "what" : "Publish"
+    }, {
+      "id" : 1073,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Client",
+      "entityId" : "blog-consumer",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-08T16:49:41Z",
+      "what" : "CreateContract",
+      "data" : "{\"clientOrgId\":\"XLM\",\"clientId\":\"blog-consumer\",\"clientVersion\":\"1.0\",\"apiOrgId\":\"XLM\",\"apiId\":\"blog\",\"apiVersion\":\"1.1\",\"planId\":\"standard\",\"planVersion\":\"1.2\"}"
+    }, {
+      "id" : 1074,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "blog",
+      "entityVersion" : "1.1",
+      "createdOn" : "2021-04-08T16:49:41Z",
+      "what" : "CreateContract",
+      "data" : "{\"clientOrgId\":\"XLM\",\"clientId\":\"blog-consumer\",\"clientVersion\":\"1.0\",\"apiOrgId\":\"XLM\",\"apiId\":\"blog\",\"apiVersion\":\"1.1\",\"planId\":\"standard\",\"planVersion\":\"1.2\"}"
+    }, {
+      "id" : 1075,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Client",
+      "entityId" : "blog-consumer",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-08T16:49:55Z",
+      "what" : "BreakContract",
+      "data" : "{\"clientOrgId\":\"XLM\",\"clientId\":\"blog-consumer\",\"clientVersion\":\"1.0\",\"apiOrgId\":\"XLM\",\"apiId\":\"blog\",\"apiVersion\":\"1.0\",\"planId\":\"standard\",\"planVersion\":\"1.1\"}"
+    }, {
+      "id" : 1076,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "blog",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-08T16:49:55Z",
+      "what" : "BreakContract",
+      "data" : "{\"clientOrgId\":\"XLM\",\"clientId\":\"blog-consumer\",\"clientVersion\":\"1.0\",\"apiOrgId\":\"XLM\",\"apiId\":\"blog\",\"apiVersion\":\"1.0\",\"planId\":\"standard\",\"planVersion\":\"1.1\"}"
+    }, {
+      "id" : 1077,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Client",
+      "entityId" : "blog-consumer",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-08T16:51:24Z",
+      "what" : "Register"
+    }, {
+      "id" : 1080,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Plan",
+      "entityId" : "standard",
+      "entityVersion" : "1.3",
+      "createdOn" : "2021-04-10T08:38:17Z",
+      "what" : "Create"
+    }, {
+      "id" : 1082,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Plan",
+      "entityId" : "standard",
+      "entityVersion" : "1.3",
+      "createdOn" : "2021-04-10T08:38:17Z",
+      "what" : "AddPolicy",
+      "data" : "{\"policyDefId\":\"IPWhitelistPolicy\"}"
+    }, {
+      "id" : 1084,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Plan",
+      "entityId" : "standard",
+      "entityVersion" : "1.3",
+      "createdOn" : "2021-04-10T08:38:17Z",
+      "what" : "AddPolicy",
+      "data" : "{\"policyDefId\":\"RateLimitingPolicy\"}"
+    }, {
+      "id" : 1085,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Plan",
+      "entityId" : "standard",
+      "entityVersion" : "1.3",
+      "createdOn" : "2021-04-10T08:38:47Z",
+      "what" : "UpdatePolicy",
+      "data" : "{\"policyDefId\":\"IPWhitelistPolicy\"}"
+    }, {
+      "id" : 1086,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Plan",
+      "entityId" : "standard",
+      "entityVersion" : "1.3",
+      "createdOn" : "2021-04-10T08:38:53Z",
+      "what" : "Lock"
+    }, {
+      "id" : 1088,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "blog",
+      "entityVersion" : "1.2",
+      "createdOn" : "2021-04-10T08:39:11Z",
+      "what" : "Create"
+    }, {
+      "id" : 1089,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "blog",
+      "entityVersion" : "1.2",
+      "createdOn" : "2021-04-10T08:39:11Z",
+      "what" : "Update",
+      "data" : "{\"changes\":[{\"name\":\"plans\",\"before\":\"\",\"after\":\"standard:1.2\"},{\"name\":\"endpoint\",\"before\":null,\"after\":\"http://jsonplaceholder.typicode.com/\"},{\"name\":\"endpointType\",\"before\":null,\"after\":\"rest\"},{\"name\":\"endpointContentType\",\"before\":null,\"after\":\"json\"}]}"
+    }, {
+      "id" : 1091,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "blog",
+      "entityVersion" : "1.2",
+      "createdOn" : "2021-04-10T08:39:11Z",
+      "what" : "AddPolicy",
+      "data" : "{\"policyDefId\":\"BASICAuthenticationPolicy\"}"
+    }, {
+      "id" : 1092,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "blog",
+      "entityVersion" : "1.2",
+      "createdOn" : "2021-04-10T08:39:20Z",
+      "what" : "Update",
+      "data" : "{\"changes\":[{\"name\":\"plans\",\"before\":\"standard:1.2\",\"after\":\"standard:1.3\"}]}"
+    }, {
+      "id" : 1093,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "blog",
+      "entityVersion" : "1.2",
+      "createdOn" : "2021-04-10T08:39:24Z",
+      "what" : "Publish"
+    }, {
+      "id" : 1094,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Client",
+      "entityId" : "blog-consumer",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-10T08:39:44Z",
+      "what" : "BreakContract",
+      "data" : "{\"clientOrgId\":\"XLM\",\"clientId\":\"blog-consumer\",\"clientVersion\":\"1.0\",\"apiOrgId\":\"XLM\",\"apiId\":\"blog\",\"apiVersion\":\"1.1\",\"planId\":\"standard\",\"planVersion\":\"1.2\"}"
+    }, {
+      "id" : 1095,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "blog",
+      "entityVersion" : "1.1",
+      "createdOn" : "2021-04-10T08:39:44Z",
+      "what" : "BreakContract",
+      "data" : "{\"clientOrgId\":\"XLM\",\"clientId\":\"blog-consumer\",\"clientVersion\":\"1.0\",\"apiOrgId\":\"XLM\",\"apiId\":\"blog\",\"apiVersion\":\"1.1\",\"planId\":\"standard\",\"planVersion\":\"1.2\"}"
+    }, {
+      "id" : 1097,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Client",
+      "entityId" : "blog-consumer",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-10T08:41:08Z",
+      "what" : "CreateContract",
+      "data" : "{\"clientOrgId\":\"XLM\",\"clientId\":\"blog-consumer\",\"clientVersion\":\"1.0\",\"apiOrgId\":\"XLM\",\"apiId\":\"blog\",\"apiVersion\":\"1.2\",\"planId\":\"standard\",\"planVersion\":\"1.3\"}"
+    }, {
+      "id" : 1098,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Api",
+      "entityId" : "blog",
+      "entityVersion" : "1.2",
+      "createdOn" : "2021-04-10T08:41:08Z",
+      "what" : "CreateContract",
+      "data" : "{\"clientOrgId\":\"XLM\",\"clientId\":\"blog-consumer\",\"clientVersion\":\"1.0\",\"apiOrgId\":\"XLM\",\"apiId\":\"blog\",\"apiVersion\":\"1.2\",\"planId\":\"standard\",\"planVersion\":\"1.3\"}"
+    }, {
+      "id" : 1099,
+      "who" : "admin",
+      "organizationId" : "XLM",
+      "entityType" : "Client",
+      "entityId" : "blog-consumer",
+      "entityVersion" : "1.0",
+      "createdOn" : "2021-04-10T08:41:13Z",
+      "what" : "Register"
+    } ]
+  } ]
+}

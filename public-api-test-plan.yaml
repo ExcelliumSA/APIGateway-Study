@@ -1,0 +1,72 @@
+vars:
+  apiman_host: "localhost:8443"
+  accept_untrusted_cert: true
+  httpbin_id: "2lsr0jhx"
+testcases:
+###############################################
+## COLLECTION OF TEST FOR EACH CASE
+## TEST CASES FOR THE PUBLIC API
+###############################################
+- name: Test-Extra-BackendAPI-Response-Headers-Removal
+  steps:
+  - type: http
+    method: GET
+    ignore_verify_ssl: {{.accept_untrusted_cert}}
+    url: "https://{{.apiman_host}}/apiman-gateway/XLM/bin/1.0/{{.httpbin_id}}"
+    skip_body: true
+    timeout: 20
+    assertions:
+    - result.statuscode ShouldEqual 200  
+    - result.headers.cf-request-id ShouldBeNil
+    - result.headers.report-to ShouldBeNil
+    - result.headers.server ShouldBeNil
+    - result.headers.cf-ray ShouldBeNil
+    - result.headers.nel ShouldBeNil
+    - result.headers.cf-cache-status ShouldBeNil
+    - result.headers.sponsored-by ShouldBeNil
+- name: Test-Security-Response-Headers-Presence
+  steps:
+  - type: http
+    method: GET
+    ignore_verify_ssl: {{.accept_untrusted_cert}}
+    url: "https://{{.apiman_host}}/apiman-gateway/XLM/bin/1.0/{{.httpbin_id}}"
+    skip_body: true
+    timeout: 20
+    assertions:
+    - result.statuscode ShouldEqual 200  
+    - result.headers.content-security-policy ShouldNotBeNil
+    - result.headers.content-security-policy ShouldEqual "default-src 'self'"
+    - result.headers.x-frame-options ShouldNotBeNil
+    - result.headers.x-frame-options ShouldEqual "DENY"    
+    - result.headers.x-content-type-options ShouldNotBeNil
+    - result.headers.x-content-type-options ShouldEqual "nosniff"   
+    - result.headers.x-xss-protection ShouldNotBeNil
+    - result.headers.x-xss-protection ShouldEqual "0"   
+- name: Test-CORS-Configuration-Rejected-Origin
+  steps:
+  - type: http
+    method: GET
+    ignore_verify_ssl: {{.accept_untrusted_cert}}
+    url: "https://{{.apiman_host}}/apiman-gateway/XLM/bin/1.0/{{.httpbin_id}}"
+    headers: {"Origin":"http://mydomain.com"}
+    skip_body: true
+    timeout: 20
+    assertions:
+    - result.statuscode ShouldEqual 400  
+    - result.headers.x-policy-failure-message ShouldNotBeNil
+    - result.headers.x-policy-failure-message ShouldContainSubstring "Origin not permitted."
+    - result.headers.x-policy-failure-type ShouldNotBeNil
+    - result.headers.x-policy-failure-type ShouldContainSubstring "Authorization"
+- name: Test-CORS-Configuration-Accepted-Origin
+  steps:
+  - type: http
+    method: GET
+    ignore_verify_ssl: {{.accept_untrusted_cert}}
+    url: "https://{{.apiman_host}}/apiman-gateway/XLM/bin/1.0/{{.httpbin_id}}"
+    headers: {"Origin":"https://localhost:8443"}
+    skip_body: true
+    timeout: 20
+    assertions:
+    - result.statuscode ShouldEqual 200  
+    - result.headers.access-control-allow-origin ShouldNotBeNil
+    - result.headers.access-control-allow-origin ShouldEqual https://localhost:8443

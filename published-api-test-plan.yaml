@@ -1,0 +1,77 @@
+vars:
+  apiman_host: "localhost:8443"  
+  api_key: "d09e70b2-2abc-47d8-9168-80878e662e6a"
+  accept_untrusted_cert: true
+  auth_user: "user"
+  auth_password: "password"
+testcases:
+###############################################
+## COLLECTION OF TEST FOR EACH CASE
+## TEST CASES FOR THE PUBLISHED API
+###############################################
+- name: Test-Missing-Api-Key
+  steps:
+  - type: http
+    method: GET
+    ignore_verify_ssl: {{.accept_untrusted_cert}}
+    url: "https://{{.apiman_host}}/apiman-gateway/XLM/blog/1.2/todos/1"
+    skip_body: false
+    timeout: 20
+    assertions:
+    - result.statuscode ShouldEqual 403    
+    - result.headers.x-gateway-error ShouldNotBeNil
+    - result.headers.x-gateway-error ShouldContainSubstring "API not public."
+- name: Test-Non-Verbose-Error
+  steps:
+  - type: http
+    method: GET
+    ignore_verify_ssl: {{.accept_untrusted_cert}}
+    url: "https://{{.apiman_host}}/apiman-gateway/XLM/blog/1.2/todos/1"
+    skip_body: false
+    timeout: 20
+    assertions:
+    - result.statuscode ShouldEqual 403    
+    - result.bodyjson.trace ShouldBeNil
+    - result.body ShouldNotContainSubstring "io.apiman.gateway.engine.beans.exceptions.InvalidApiException"
+- name: Test-Missing-Basic-Authentication
+  steps:
+  - type: http
+    method: GET
+    ignore_verify_ssl: {{.accept_untrusted_cert}}
+    url: "https://{{.apiman_host}}/apiman-gateway/XLM/blog/1.2/todos/1?apikey={{.api_key}}"
+    skip_body: false
+    timeout: 20
+    assertions:
+    - result.statuscode ShouldEqual 401  
+    - result.headers.x-policy-failure-message ShouldNotBeNil
+    - result.headers.x-policy-failure-message ShouldContainSubstring "BASIC authentication failed."
+    - result.headers.x-policy-failure-type ShouldNotBeNil
+    - result.headers.x-policy-failure-type ShouldContainSubstring "Authentication"
+    - result.bodyjson.headers.www-authenticate ShouldContainSubstring 'Basic realm="Blog"'
+- name: Test-Valid-Basic-Authentication
+  steps:
+  - type: http
+    method: GET
+    ignore_verify_ssl: {{.accept_untrusted_cert}}
+    url: "https://{{.apiman_host}}/apiman-gateway/XLM/blog/1.2/todos/1?apikey={{.api_key}}"
+    skip_body: false
+    basic_auth_user: {{.auth_user}}
+    basic_auth_password: {{.auth_password}}
+    timeout: 20
+    assertions:
+    - result.statuscode ShouldEqual 200  
+    - result.headers.x-ratelimit-limit ShouldNotBeNil
+    - result.headers.x-ratelimit-limit ShouldContainSubstring 10
+    - result.headers.x-ratelimit-remaining ShouldNotBeNil
+    - result.headers.x-ratelimit-remaining ShouldNotContainSubstring -1
+    - result.bodyjson ShouldNotBeNil
+- name: Test-Rate-Limiting-Effectiveness
+  steps:
+  - script: python multi-request-sender.py "https://{{.apiman_host}}/apiman-gateway/XLM/blog/1.2/todos/1?apikey={{.api_key}}" "{{.auth_user}}:{{.auth_password}}"
+    assertions:
+    - result.code ShouldEqual 0
+    - result.systemout ShouldNotBeNil
+    - result.systemout ShouldContainSubstring "[RC]:429"
+    - result.systemout ShouldContainSubstring "[X-Policy-Failure-Message]:Rate limit exceeded."
+    - result.systemout ShouldContainSubstring "[X-RateLimit-Remaining]:-1"
+ 
