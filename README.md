@@ -30,6 +30,8 @@ PS> docker run --rm -it righettod/demo-test-apigtw /bin/bash
 $ curl -Lsk https://[DOCKER_HOST_IP]:8443/apimanui/api-manager | grep -ic "apiman"
 # Ensure that result of the command above is different from zero. 
 # Otherwise, wait a few seconds, and relaunch the command...
+# If you only want to initialize the API Gateway without running the demo 
+# then type: python import-config.py [DOCKER_HOST_IP]:8443 
 $ bash run.sh [DOCKER_HOST_IP]:8443
 $ exit
 PS> docker-compose down
