@@ -1,0 +1,10 @@
+services:
+    apigtw:
+        image: "apiman/on-wildfly:latest"
+        ports:
+            - "8080:8080"
+            - "8443:8443"
+        container_name: "righettod_apigtw"
+    demo-test-apigtw:
+        build: .
+        image: "righettod/demo-test-apigtw"

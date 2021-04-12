@@ -1,7 +1,5 @@
-# docker build --rm -t righettod/demo-test-apigtw .
-# docker run -it righettod/demo-test-apigtw /bin/bash
 FROM alpine:latest
-RUN apk add --no-cache bash curl jq python3 py3-pip wget
+RUN apk add --no-cache bash curl jq nano python3 py3-pip vim wget
 RUN ln -s /usr/bin/python3 /usr/bin/python
 RUN pip install requests python-keycloak
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
