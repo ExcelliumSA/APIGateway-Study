@@ -28,7 +28,8 @@ Use the following set of commands:
 PS> docker-compose up --build --detach
 PS> docker run --rm -it righettod/demo-test-apigtw /bin/bash
 $ curl -Lsk https://[DOCKER_HOST_IP]:8443/apimanui/api-manager | grep -ic "apiman"
-# Ensure that result of the command above is different from zero. Otherwise, wait a few seconds, and relaunch the command...
+# Ensure that result of the command above is different from zero. 
+# Otherwise, wait a few seconds, and relaunch the command...
 $ bash run.sh [DOCKER_HOST_IP]:8443
 $ exit
 PS> docker-compose down
