@@ -18,7 +18,7 @@ To obtain a PNG follow these steps:
 6. Use Paint to save the clipboard to a **PNG** file.
 7. Name the image file `FigureXX.png` where XX is the number with 0 padding on 2 positions.
 
-:bulb: Point 3 to 7 can be replaced by a direct printscreen of the rendered schema if it fit a screen.
+:bulb: Point 3 to 6 can be replaced by a direct printscreen of the rendered schema if it fit a screen.
 
 ## Mermaid code for schemas
 
