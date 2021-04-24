@@ -76,3 +76,59 @@ sequenceDiagram
     end 
     TestCase->>TestCase: Generate report of the test case
 ```
+
+### Figure 06
+
+#### API Published
+
+```mermaid
+sequenceDiagram
+    participant ClientApp
+    participant IPWhitelistPolicy
+    participant RateLimitingPolicy
+    participant BasicAuthenticationPolicy   
+    participant BackendAPI
+    ClientApp->>IPWhitelistPolicy: Send request (via the APIGtw)
+	alt IdentifyViolation
+		 IPWhitelistPolicy->>ClientApp: Send error response (via the APIGtw)
+	else
+		IPWhitelistPolicy->>RateLimitingPolicy: Forward the request to the next policy in the chain
+        alt IdentifyViolation
+            RateLimitingPolicy->>ClientApp: Send error response (via the APIGtw)
+        else
+            RateLimitingPolicy->>BasicAuthenticationPolicy: Forward the request to the next policy in the chain
+            alt IdentifyViolation
+                BasicAuthenticationPolicy->>ClientApp: Send error response (via the APIGtw)
+            else
+                BasicAuthenticationPolicy->>BackendAPI: Forward the request (via the APIGtw)
+                BackendAPI->>ClientApp: Send the API response (via the APIGtw)
+            end
+         end
+	end    
+```
+
+### Figure 07
+
+#### API Public
+
+```mermaid
+sequenceDiagram
+    participant ClientApp
+    participant CORSPolicy
+    participant HTTPSecurityPolicy 
+    participant SimpleHeaderPolicy
+    participant BackendAPI
+    ClientApp->>CORSPolicy: Send request (via the APIGtw)
+	alt IdentifyViolation
+		CORSPolicy->>ClientApp: Send error response (via the APIGtw)
+	else
+        CORSPolicy->>BackendAPI: Forward the request (via the APIGtw)
+    end
+    BackendAPI->>SimpleHeaderPolicy: Send the API response (via the APIGtw)
+    SimpleHeaderPolicy->>SimpleHeaderPolicy: Perform its processing on the response
+    SimpleHeaderPolicy->>HTTPSecurityPolicy: Forward the request to the next policy in the chain
+    HTTPSecurityPolicy->>HTTPSecurityPolicy: Perform its processing on the response
+    HTTPSecurityPolicy->>CORSPolicy: Forward the request to the next policy in the chain
+    CORSPolicy->>CORSPolicy: Perform its processing on the response
+    CORSPolicy->>ClientApp: Send the API response (via the APIGtw)
+```
