@@ -1,7 +1,7 @@
 FROM alpine:latest
 RUN apk add --no-cache bash curl jq nano python3 py3-pip vim wget
 RUN ln -s /usr/bin/python3 /usr/bin/python
-RUN pip install requests python-keycloak junit2html
+RUN pip install requests python-keycloak junit2html httpie
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 RUN mkdir /work
 ENV PATH "$PATH:/work"

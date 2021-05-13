@@ -10,17 +10,20 @@ authent = None
 if len(sys.argv) == 3:
     creds = sys.argv[2].split(":")
     authent = HTTPBasicAuth(creds[0], creds[1])
+global_delay_in_seconds = 0
 with requests.Session() as s:
     s.auth = authent
     s.verify = False
     s.timeout = 20
     for i in range(0,20):
         response = s.get(url)
+        global_delay_in_seconds += response.elapsed.total_seconds()
         if i == 19:
             print(f"[RC]:{response.status_code}")
             for h in response.headers:
                 print(f"[{h}]:{response.headers[h]}")
             print(f"[BODY]:{response.text}")
-sys.exit(0)
-
-
+if global_delay_in_seconds > 10:
+    sys.exit(1)
+else:
+    sys.exit(0)
