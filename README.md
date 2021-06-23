@@ -10,7 +10,7 @@ XXX
 
 > :information_source: Download the PDF file to enable the links inside the PDF.
 
-See file [study-note.pdf](study-note.pdf) to access to the full study note gathered and used for the demo web app as well as the blog post.
+See file [study-note.pdf](study-note.pdf) to access to the full study note gathered and used for the demo as well as the blog post.
 
 # Execute the lab
 
