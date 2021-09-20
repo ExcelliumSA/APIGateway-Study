@@ -4,7 +4,7 @@ Contains the materials used for the blog post about the testing of the API Gatew
 
 # Blog post link
 
-XXX
+https://excellium-services.com/2021/09/20/how-to-automatically-validate-the-configuration-of-your-api-gateway/
 
 # Study note
 
